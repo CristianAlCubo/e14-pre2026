@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Descarga actas E14</title>
+<title>Actas E14 delegados · descarga centralizada · 1.ª vuelta</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:16px}
 .card{background:#fff;border-radius:20px;padding:32px;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.1);text-align:center}
 .header-bar{height:6px;border-radius:20px 20px 0 0;background:linear-gradient(90deg,#FCD116 33%,#003893 33%,#003893 66%,#CE1126 66%);margin:-32px -32px 24px -32px}
-h1{font-size:1.5rem;color:#222;margin-bottom:8px}
+h1{font-size:1.45rem;color:#222;margin-bottom:16px;line-height:1.3}
 h1 span{color:#003893}
 h1 span:nth-child(2){color:#CE1126}
 p{color:#555;font-size:.9rem;line-height:1.5;margin-bottom:24px}
+p strong{color:#003893;font-weight:600}
+p.desc{font-size:.85rem;margin-bottom:24px}
 .btns{display:flex;flex-direction:column;gap:12px}
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:600;font-size:1rem;transition:transform .15s,box-shadow .15s;color:#fff;border:none;cursor:pointer}
 .btn:hover{transform:translateY(-2px)}
@@ -40,8 +42,9 @@ p{color:#555;font-size:.9rem;line-height:1.5;margin-bottom:24px}
 <body>
 <div class="card">
 <div class="header-bar"></div>
-<h1>Descarga <span>actas</span> <span>E14</span></h1>
-<p>Desde este portal puedes descargar la base de datos de mesas y actas E14 de las elecciones presidenciales de Colombia 2026. Incluye una base SQLite con la organizaci&oacute;n territorial y su relaci&oacute;n con cada acta reportada. El archivo .tar agrupa en un solo paquete los PDF de todas las actas reportadas.</p>
+<h1>Todas las actas <span>E14</span> de <span>delegados</span> en un solo archivo</h1>
+<p>Recopilamos y centralizamos <strong>todas las actas de delegados disponibles hasta la fecha</strong>, de la <strong>primera vuelta</strong> de las elecciones presidenciales de Colombia 2026. <strong>Una sola descarga</strong> con toda la informaci&oacute;n recopilada: elige base de datos SQLite o paquete TAR con los PDF.</p>
+<p class="desc">La base SQLite incluye la organizaci&oacute;n territorial y su relaci&oacute;n con cada acta de delegados reportada. El archivo .tar agrupa todos los PDF en un &uacute;nico fichero.</p>
 <div class="btns">
 <a class="btn btn-sql" href="https://e14s-pre2026.ccubillos.com/e14.db" download>
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
@@ -54,10 +57,10 @@ p{color:#555;font-size:.9rem;line-height:1.5;margin-bottom:24px}
 </div>
 <div class="update">
 <div class="progress-block">
-<span class="progress-label">Tasa de actas procesadas</span>
+<span class="progress-label">Actas de delegados procesadas · 1.ª vuelta</span>
 <div class="progress-rate">98,9%<span>del total</span></div>
-<div class="progress-bar" role="progressbar" aria-valuenow="120697" aria-valuemin="0" aria-valuemax="122020" aria-label="Actas procesadas"><div class="progress-fill" style="width:98.92%"></div></div>
-<p class="progress-count"><strong>120.697</strong> de <span>122.020</span> actas</p>
+<div class="progress-bar" role="progressbar" aria-valuenow="120697" aria-valuemin="0" aria-valuemax="122020" aria-label="Actas de delegados procesadas, primera vuelta"><div class="progress-fill" style="width:98.92%"></div></div>
+<p class="progress-count"><strong>120.697</strong> de <span>122.020</span> actas de delegados</p>
 </div>
 <p class="update-date">&Uacute;ltima actualizaci&oacute;n: 01 de junio de 2026 a las 00:24</p>
 </div>
