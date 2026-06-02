@@ -3,83 +3,483 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#003893">
 <title>Actas E14 delegados · descarga centralizada · 1.ª vuelta</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:16px}
-.card{background:#fff;border-radius:20px;padding:32px;max-width:420px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.1);text-align:center}
-.header-bar{height:6px;border-radius:20px 20px 0 0;background:linear-gradient(90deg,#FCD116 33%,#003893 33%,#003893 66%,#CE1126 66%);margin:-32px -32px 24px -32px}
-h1{font-size:1.45rem;color:#222;margin-bottom:16px;line-height:1.3}
-h1 span{color:#003893}
-h1 span:nth-child(2){color:#CE1126}
-p{color:#555;font-size:.9rem;line-height:1.5;margin-bottom:24px}
-p strong{color:#003893;font-weight:600}
-p.desc{font-size:.85rem;margin-bottom:24px}
-.btns{display:flex;flex-direction:column;gap:12px}
-.btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 24px;border-radius:12px;text-decoration:none;font-weight:600;font-size:1rem;transition:transform .15s,box-shadow .15s;color:#fff;border:none;cursor:pointer}
-.btn:hover{transform:translateY(-2px)}
-.btn:active{transform:translateY(0)}
-.btn-sql{background:#003893;box-shadow:0 4px 12px rgba(0,56,147,.3)}
-.btn-sql:hover{box-shadow:0 6px 20px rgba(0,56,147,.4)}
-.btn-tar{background:#CE1126;box-shadow:0 4px 12px rgba(206,17,38,.3)}
-.btn-tar:hover{box-shadow:0 6px 20px rgba(206,17,38,.4)}
-.btn svg{flex-shrink:0}
-.btn-inner{display:flex;flex-direction:column;align-items:flex-start;line-height:1.25;text-align:left}
-.btn-size{font-size:.75rem;font-weight:500;opacity:.85;margin-top:2px}
-.update{margin-top:20px;padding-top:16px;border-top:1px solid #eee}
-.progress-block{background:linear-gradient(135deg,#f8f9fc 0%,#eef2f9 100%);border:1px solid #e2e8f0;border-radius:14px;padding:18px 16px;margin-bottom:12px}
-.progress-label{display:block;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#003893;margin-bottom:6px}
-.progress-rate{font-size:2.25rem;font-weight:800;color:#003893;line-height:1;margin-bottom:10px}
-.progress-rate span{font-size:1rem;font-weight:600;color:#555;margin-left:4px}
-.progress-bar{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:10px}
-.progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#003893,#0056b8 70%,#CE1126);transition:width .4s ease}
-.progress-count{font-size:1.05rem;font-weight:600;color:#222}
-.progress-count strong{color:#003893;font-size:1.2rem}
-.progress-count span{color:#666;font-weight:500}
-.update-date{color:#999;font-size:.75rem;line-height:1.4}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--yellow:#FCD116;
+--blue:#003893;
+--blue-light:#0056b8;
+--red:#CE1126;
+--ink:#1a1a2e;
+--muted:#5c6370;
+--surface:#fff;
+--bg:#eef1f8;
+--radius:20px;
+--shadow:0 4px 24px rgba(0,56,147,.08);
+--shadow-hover:0 12px 40px rgba(0,56,147,.14);
+}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){
+html{scroll-behavior:auto}
+*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+.progress-rate,.progress-bar,.progress-count,.progress-pending{opacity:1!important;transform:none!important}
+.progress-fill{width:var(--progress,0%)!important;transition:none!important}
+.hero .flag-bar,.hero h1,.hero-lead{opacity:1!important;transform:none!important;animation:none!important}
+.dl-card,.pick-guide{opacity:1!important;transform:none!important;transition:none!important}
+}
+@keyframes hero-enter{
+from{opacity:0;transform:translateY(-12px)}
+to{opacity:1;transform:translateY(0)}
+}
+.reveal{
+opacity:0;transform:translateY(-12px);
+transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1);
+}
+.reveal.is-visible{opacity:1;transform:translateY(0)}
+.downloads .dl-card:nth-child(1).is-visible{transition-delay:.06s}
+.downloads .dl-card:nth-child(2).is-visible{transition-delay:.18s}
+.pick-guide.is-visible{transition-delay:.08s}
+body{
+min-height:100vh;
+position:relative;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+background:var(--bg);
+color:var(--ink);
+line-height:1.5;
+-webkit-tap-highlight-color:rgba(0,56,147,.12);
+touch-action:manipulation;
+overflow-x:hidden;
+padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+}
+.bg-scene{
+position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+background:var(--bg);
+}
+.bg-scene__stripes{
+position:absolute;inset:-20%;
+opacity:.028;
+background:repeating-linear-gradient(112deg,
+var(--yellow) 0 2px,transparent 2px 48px,
+var(--blue) 48px 50px,transparent 50px 96px,
+var(--red) 96px 98px,transparent 98px 144px);
+}
+.bg-scene__map{
+position:absolute;left:50%;top:54%;width:min(52vw,380px);aspect-ratio:6/7;
+transform:translate(-50%,-50%);
+opacity:.042;
+background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 140' fill='none'%3E%3Cpath fill='%23003893' d='M58 4c10-1 20 2 28 9 8 7 13 17 14 28 1 11-3 22-10 31-6 8-14 15-23 21-9 6-19 10-29 11-8 1-16-2-22-8-6-6-9-14-8-22 1-9 6-17 12-24 6-7 13-13 19-20 4-5 7-11 10-17 2-4 6-8 9-9z'/%3E%3Cpath fill='%23003893' d='M18 18c3-4 8-6 13-5 5 1 9 5 11 10 2 5 1 11-2 15-3 4-8 7-13 7-5 0-10-3-13-7-3-4-4-10-2-15 1-3 3-5 6-5z' opacity='.6'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.bg-scene__andes{
+position:absolute;left:0;right:0;bottom:0;height:38%;
+opacity:.05;
+background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320' preserveAspectRatio='none'%3E%3Cpath fill='none' stroke='%23003893' stroke-width='1.2' d='M0 260 C180 180 320 220 480 160 C640 100 780 140 920 90 C1060 40 1200 80 1440 30'/%3E%3Cpath fill='none' stroke='%23003893' stroke-width='.8' d='M0 280 C200 210 360 240 520 190 C680 140 840 170 1000 120 C1160 70 1300 100 1440 60'/%3E%3Cpath fill='none' stroke='%23CE1126' stroke-width='.6' d='M0 300 C220 240 400 260 580 210 C760 160 940 190 1120 150 C1280 115 1360 130 1440 100'/%3E%3C/svg%3E") center bottom/100% 100% no-repeat;
+}
+.bg-scene__grain{
+position:absolute;inset:0;opacity:.035;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+background-size:180px 180px;
+}
+.page{max-width:960px;margin:0 auto;width:100%;position:relative;z-index:1}
+.skip-link{
+position:absolute;top:-100%;left:16px;z-index:100;
+padding:10px 16px;background:var(--blue);color:#fff;
+border-radius:8px;font-weight:600;text-decoration:none;
+transition:top .2s ease;
+}
+.skip-link:focus-visible{top:16px;outline:2px solid var(--yellow);outline-offset:2px}
+.hero{text-align:center;padding:32px 0 20px}
+.flag-bar{
+display:inline-flex;height:5px;width:72px;border-radius:999px;overflow:hidden;margin-bottom:20px;
+opacity:0;animation:hero-enter .65s cubic-bezier(.22,1,.36,1) .05s forwards;
+}
+.flag-bar span{flex:1}
+.flag-bar span:nth-child(1){background:var(--yellow)}
+.flag-bar span:nth-child(2){background:var(--blue)}
+.flag-bar span:nth-child(3){background:var(--red)}
+.hero h1{
+font-size:clamp(1.5rem,4vw,2rem);
+font-weight:800;
+line-height:1.25;
+text-wrap:balance;
+margin-bottom:14px;
+letter-spacing:-.02em;
+opacity:0;animation:hero-enter .65s cubic-bezier(.22,1,.36,1) .15s forwards;
+}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero h1 strong{font-weight:800;color:var(--red)}
+.hero-lead{
+max-width:640px;margin:0 auto 10px;
+color:var(--muted);font-size:clamp(.9rem,2.2vw,1rem);
+text-wrap:pretty;
+opacity:0;animation:hero-enter .65s cubic-bezier(.22,1,.36,1) .28s forwards;
+}
+.hero-lead b{color:var(--blue);font-weight:600}
+.hero-desc{
+max-width:560px;margin:0 auto 16px;
+font-size:.85rem;color:#888;
+text-wrap:pretty;
+}
+.hero-chips{
+display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+max-width:640px;margin:0 auto;
+}
+.chip{
+display:inline-block;padding:6px 14px;border-radius:999px;
+font-size:.75rem;font-weight:600;color:var(--blue);
+background:rgba(0,56,147,.07);border:1px solid rgba(0,56,147,.1);
+}
+.pick-guide{
+background:var(--surface);border-radius:var(--radius);
+padding:20px 18px;margin-bottom:0;
+box-shadow:var(--shadow);border:1px solid rgba(0,56,147,.06);
+}
+.pick-guide h2{
+font-size:.95rem;font-weight:700;color:var(--ink);
+margin-bottom:14px;text-align:center;
+}
+.pick-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.pick-table caption{
+position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+.pick-table th,.pick-table td{
+padding:10px 12px;text-align:left;vertical-align:top;
+border-bottom:1px solid #eef1f5;
+}
+.pick-table tr:last-child th,.pick-table tr:last-child td{border-bottom:none}
+.pick-table thead th{
+font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
+color:var(--muted);background:#f8f9fc;
+}
+.pick-table thead th:first-child{border-radius:10px 0 0 0}
+.pick-table thead th:last-child{border-radius:0 10px 0 0}
+.pick-table tbody th{
+font-weight:600;color:var(--muted);width:28%;white-space:nowrap;
+background:#fafbfc;
+}
+.pick-table tbody td{color:var(--ink);line-height:1.4}
+.pick-table .col-db{color:var(--blue);font-weight:600}
+.pick-table .col-tar{color:var(--red);font-weight:600}
+@media(max-width:520px){
+.pick-table thead{display:none}
+.pick-table tbody tr{display:block;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #eef1f5}
+.pick-table tbody tr:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.pick-table tbody th{display:block;width:100%;padding:0 0 6px;background:none;border:none;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em}
+.pick-table tbody td{display:block;padding:2px 0 8px;border:none}
+.pick-table tbody td::before{
+display:block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;
+}
+.pick-table tbody td.col-db::before{content:"Base de datos";color:var(--blue)}
+.pick-table tbody td.col-tar::before{content:"TAR (PDFs)";color:var(--red)}
+}
+.downloads{
+display:grid;
+grid-template-columns:1fr;
+gap:20px;
+margin-bottom:28px;
+}
+@media(min-width:640px){
+.downloads{grid-template-columns:1fr 1fr;gap:24px}
+}
+.dl-card{
+display:flex;flex-direction:column;
+background:var(--surface);
+border-radius:var(--radius);
+overflow:hidden;
+box-shadow:var(--shadow);
+border:1px solid rgba(0,56,147,.06);
+}
+.dl-card__visual{
+position:relative;overflow:hidden;
+aspect-ratio:3/2;
+background:linear-gradient(135deg,#f0f4fa,#e8edf5);
+}
+.dl-card__visual img{
+width:100%;height:100%;object-fit:cover;display:block;
+}
+.dl-card__badge{
+position:absolute;top:12px;right:12px;
+padding:5px 12px;border-radius:999px;
+font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.dl-card--db .dl-card__badge{background:rgba(0,56,147,.88);color:#fff}
+.dl-card--e14 .dl-card__badge{background:rgba(206,17,38,.88);color:#fff}
+.dl-card__body{
+padding:20px 20px 22px;
+flex:1;display:flex;flex-direction:column;
+}
+.dl-card__title{
+font-size:1.05rem;font-weight:700;margin-bottom:6px;
+display:flex;align-items:center;gap:8px;
+}
+.dl-card__title svg{flex-shrink:0;color:var(--blue)}
+.dl-card--e14 .dl-card__title svg{color:var(--red)}
+.dl-card__desc{
+font-size:.82rem;color:var(--muted);margin-bottom:12px;flex:1;
+text-wrap:pretty;line-height:1.45;
+}
+.dl-card__warn{
+display:flex;align-items:flex-start;gap:8px;
+padding:10px 12px;margin-bottom:14px;border-radius:10px;
+font-size:.75rem;line-height:1.45;color:#7a4b00;
+background:#fff8eb;border:1px solid #fde6b0;
+}
+.dl-card__warn svg{flex-shrink:0;margin-top:1px;color:#c47f00}
+.dl-card__action{
+display:flex;align-items:center;justify-content:space-between;gap:10px;
+width:100%;padding:12px 16px;border-radius:12px;border:none;
+font-weight:700;font-size:.92rem;color:#fff;text-decoration:none;cursor:pointer;
+transition:transform .2s ease,box-shadow .2s ease,opacity .2s ease;
+}
+@media(hover:hover){
+.dl-card__action:hover{transform:translateY(-2px)}
+.dl-card--db .dl-card__action:hover{box-shadow:0 6px 20px rgba(0,56,147,.35)}
+.dl-card--e14 .dl-card__action:hover{box-shadow:0 6px 20px rgba(206,17,38,.35)}
+}
+.dl-card__action:active{transform:translateY(0)}
+.dl-card__action:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.dl-card__action.is-downloading{opacity:.85;pointer-events:none}
+.dl-card__action.is-downloading .dl-card__size{display:none}
+.dl-card__action-spinner{
+display:none;width:16px;height:16px;flex-shrink:0;
+border:2px solid rgba(255,255,255,.35);border-top-color:#fff;
+border-radius:50%;animation:spin .7s linear infinite;
+}
+.dl-card__action.is-downloading .dl-card__action-label>svg{display:none}
+.dl-card__action.is-downloading .dl-card__action-spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dl-card__action-label{
+display:flex;align-items:center;gap:8px;min-width:0;
+}
+.dl-card--db .dl-card__action{background:var(--blue);box-shadow:0 4px 14px rgba(0,56,147,.25)}
+.dl-card--e14 .dl-card__action{background:var(--red);box-shadow:0 4px 14px rgba(206,17,38,.25)}
+.dl-card__size{
+font-size:.75rem;font-weight:500;opacity:.9;
+font-variant-numeric:tabular-nums;
+}
+.dl-card__action svg{flex-shrink:0;opacity:.9}
+.progress-section{
+position:relative;
+background:var(--surface);
+border-radius:var(--radius);
+padding:32px 26px 26px;
+margin-bottom:32px;
+box-shadow:0 8px 36px rgba(0,56,147,.12);
+border:1px solid rgba(0,56,147,.1);
+overflow:hidden;
+}
+.progress-section::before{
+content:"";position:absolute;top:0;left:0;right:0;height:5px;
+background:linear-gradient(90deg,var(--yellow) 33%,var(--blue) 33%,var(--blue) 66%,var(--red) 66%);
+}
+.progress-head{
+display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+gap:12px 20px;margin-bottom:18px;
+}
+.progress-label{
+display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+color:var(--blue);margin-bottom:0;flex:1 1 100%;
+}
+.progress-rate{
+font-size:clamp(2.5rem,9vw,3.75rem);font-weight:800;
+color:var(--blue);line-height:1;
+font-variant-numeric:tabular-nums;
+opacity:0;transform:translateY(12px);
+transition:opacity .6s ease,transform .6s ease;
+}
+.progress-section.is-visible .progress-rate{
+opacity:1;transform:translateY(0);
+}
+.progress-rate span{
+display:block;font-size:clamp(.85rem,2.5vw,1rem);font-weight:600;
+color:var(--muted);margin-left:0;margin-top:6px;letter-spacing:0;
+}
+.progress-body{flex:1 1 220px;min-width:0}
+.progress-bar{
+height:14px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:14px;
+opacity:0;transform:scaleX(.96);transform-origin:left center;
+transition:opacity .5s ease .15s,transform .5s ease .15s;
+}
+.progress-section.is-visible .progress-bar{
+opacity:1;transform:scaleX(1);
+}
+.progress-fill{
+height:100%;border-radius:999px;
+background:linear-gradient(90deg,var(--blue),var(--blue-light) 70%,var(--red));
+width:0;
+transition:width 1.1s cubic-bezier(.22,1,.36,1) .35s;
+}
+.progress-section.is-visible .progress-fill{width:var(--progress,0%)}
+.progress-meta{
+display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;
+}
+.progress-count{
+font-size:clamp(1.05rem,2.8vw,1.2rem);font-weight:600;color:var(--ink);
+font-variant-numeric:tabular-nums;
+opacity:0;transform:translateY(6px);
+transition:opacity .5s ease .55s,transform .5s ease .55s;
+}
+.progress-section.is-visible .progress-count{
+opacity:1;transform:translateY(0);
+}
+.progress-count strong{color:var(--blue);font-size:clamp(1.2rem,3.5vw,1.45rem)}
+.progress-count span{color:var(--muted);font-weight:500}
+.progress-pending{
+font-size:.82rem;font-weight:600;color:var(--red);
+font-variant-numeric:tabular-nums;
+opacity:0;transform:translateY(6px);
+transition:opacity .5s ease .65s,transform .5s ease .65s;
+}
+.progress-section.is-visible .progress-pending{
+opacity:1;transform:translateY(0);
+}
+.update-date{
+color:#999;font-size:.75rem;text-align:right;
+}
+@media(min-width:640px){
+.progress-head{align-items:center}
+.progress-label{flex:1 1 auto;margin-bottom:0}
+.progress-rate{flex:0 0 auto;text-align:right}
+.progress-rate span{display:block;text-align:right}
+.progress-body{max-width:100%}
+}
 </style>
 <script defer src="https://cloud.umami.is/script.js" data-website-id="f39c5cd2-b74f-47e3-8d67-e1a9ee154794"></script>
 </head>
 <body>
-<div class="card">
-<div class="header-bar"></div>
-<h1>Todas las actas <span>E14</span> de <span>delegados</span> en un solo archivo</h1>
-<p>Recopilamos y centralizamos <strong>todas las actas de delegados disponibles hasta la fecha</strong>, de la <strong>primera vuelta</strong> de las elecciones presidenciales de Colombia 2026. <strong>Una sola descarga</strong> con toda la informaci&oacute;n recopilada: elige base de datos SQLite o paquete TAR con los PDF.</p>
-<p class="desc">La base SQLite incluye la organizaci&oacute;n territorial y su relaci&oacute;n con cada acta de delegados reportada. El archivo .tar agrupa todos los PDF en un &uacute;nico fichero.</p>
-<div class="btns">
-<a class="btn btn-sql" href="https://e14s-pre2026.ccubillos.com/e14.db"
+<div class="bg-scene" aria-hidden="true">
+<div class="bg-scene__stripes"></div>
+<div class="bg-scene__map"></div>
+<div class="bg-scene__andes"></div>
+<div class="bg-scene__grain"></div>
+</div>
+<a class="skip-link" href="#main">Ir al contenido</a>
+<div class="page">
+<header class="hero">
+<div class="flag-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+<h1>Todas las actas <em translate="no">E14</em> de <strong>delegados</strong> en un solo lugar</h1>
+<p class="hero-lead">Recopilamos y centralizamos <b>todas las actas de delegados disponibles hasta la fecha</b>, de la <b>primera vuelta</b> de las elecciones presidenciales de Colombia 2026. Un recurso &uacute;til para <b>analistas de datos</b>, <b>investigadores independientes</b>, periodistas y equipos que necesitan auditar, cruzar o procesar el universo completo de actas.</p>
+<div class="hero-chips" aria-label="Audiencia objetivo">
+<span class="chip">Analistas de datos</span>
+<span class="chip">Investigadores</span>
+<span class="chip">Periodistas</span>
+</div>
+</header>
+<main id="main">
+<section class="progress-section" aria-labelledby="progress-heading">
+<div class="progress-head">
+<span class="progress-label" id="progress-heading">Actas de delegados procesadas · 1.ª vuelta</span>
+<div class="progress-rate">98,9%<span>del total recopilado</span></div>
+</div>
+<div class="progress-body">
+<div class="progress-bar" role="progressbar" aria-valuenow="120697" aria-valuemin="0" aria-valuemax="122020" aria-valuetext="98,9 por ciento" aria-labelledby="progress-heading"><div class="progress-fill" style="--progress:98.92%"></div></div>
+<div class="progress-meta">
+<p class="progress-count"><strong>120.697</strong> de <span>122.020</span> actas</p>
+<p class="progress-pending">Faltan 1.323 actas</p>
+<p class="update-date">&Uacute;ltima actualizaci&oacute;n: 01 de junio de 2026, 00:24</p>
+</div>
+</div>
+</section>
+<section class="downloads" aria-label="Opciones de descarga">
+<article class="dl-card dl-card--db reveal">
+<div class="dl-card__visual">
+<img src="db.webp" alt="Diagrama de base de datos relacional con tablas de departamentos, municipios, zonas, puestos y actas E14" width="1536" height="1024" loading="lazy">
+<span class="dl-card__badge">SQLite</span>
+</div>
+<div class="dl-card__body">
+<h2 class="dl-card__title">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+Base de Datos
+</h2>
+<p class="dl-card__desc">Organizaci&oacute;n territorial completa (departamentos, municipios, zonas, puestos) y su relaci&oacute;n con cada acta de delegados reportada.</p>
+<a class="dl-card__action" href="https://e14s-pre2026.ccubillos.com/e14.db"
 data-track="descarga-e14-delegados-sqlite"
 data-track-formato="sqlite"
 data-track-archivo="e14.db"
 data-track-vuelta="primera"
-data-track-tamano="38.76 MB">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-<span class="btn-inner">Descargar DB (SQL)<span class="btn-size">38.76 MB</span></span>
+data-track-tamano="38.76 MB"
+aria-live="polite">
+<span class="dl-card__action-label" data-label="Descargar DB (SQL)">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<span class="dl-card__action-spinner" aria-hidden="true"></span>
+<span class="dl-card__action-text">Descargar DB (SQL)</span>
+</span>
+<span class="dl-card__size">38.76&nbsp;MB</span>
 </a>
-<a class="btn btn-tar" href="https://e14s-pre2026.ccubillos.com/e14s.tar"
+</div>
+</article>
+<article class="dl-card dl-card--e14 reveal">
+<div class="dl-card__visual">
+<img src="e14.webp" alt="Acta de escrutinio E14 de delegados con sello v&aacute;lida" width="1536" height="1024" loading="lazy">
+<span class="dl-card__badge">PDFs</span>
+</div>
+<div class="dl-card__body">
+<h2 class="dl-card__title">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+Actas <span translate="no">E14</span>
+</h2>
+<p class="dl-card__desc">Todos los PDF de las actas de delegados agrupados en un &uacute;nico archivo TAR, listos para consulta o procesamiento.</p>
+<div class="dl-card__warn">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+<span>Archivo de <strong>22.5&nbsp;GB</strong>: verifica espacio libre en disco, usa una conexi&oacute;n estable y ten en cuenta que la descarga puede tardar seg&uacute;n tu conexión.</span>
+</div>
+<a class="dl-card__action" href="https://e14s-pre2026.ccubillos.com/e14s.tar"
 data-track="descarga-e14-delegados-tar"
 data-track-formato="tar"
 data-track-archivo="e14s.tar"
 data-track-vuelta="primera"
-data-track-tamano="22.54 GB">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-<span class="btn-inner">Descargar TAR (PDFs)<span class="btn-size">22.54 GB</span></span>
+data-track-tamano="22.54 GB"
+aria-live="polite">
+<span class="dl-card__action-label" data-label="Descargar TAR (PDFs)">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<span class="dl-card__action-spinner" aria-hidden="true"></span>
+<span class="dl-card__action-text">Descargar TAR (PDFs)</span>
+</span>
+<span class="dl-card__size">22.54&nbsp;GB</span>
 </a>
 </div>
-<div class="update">
-<div class="progress-block">
-<span class="progress-label">Actas de delegados procesadas · 1.ª vuelta</span>
-<div class="progress-rate">98,9%<span>del total</span></div>
-<div class="progress-bar" role="progressbar" aria-valuenow="120697" aria-valuemin="0" aria-valuemax="122020" aria-label="Actas de delegados procesadas, primera vuelta"><div class="progress-fill" style="width:98.92%"></div></div>
-<p class="progress-count"><strong>120.697</strong> de <span>122.020</span> actas de delegados</p>
-</div>
-<p class="update-date">&Uacute;ltima actualizaci&oacute;n: 01 de junio de 2026 a las 00:24</p>
-</div>
+</article>
+</section>
+<section class="pick-guide reveal" aria-labelledby="pick-guide-heading">
+<h2 id="pick-guide-heading">&iquest;Qu&eacute; descargo?</h2>
+<table class="pick-table">
+<caption>Comparaci&oacute;n entre base de datos SQLite y paquete TAR con PDFs</caption>
+<thead>
+<tr>
+<th scope="col"></th>
+<th scope="col" class="col-db">Base de datos</th>
+<th scope="col" class="col-tar">TAR (PDFs)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">Tama&ntilde;o</th>
+<td class="col-db">38&nbsp;MB</td>
+<td class="col-tar">22.5&nbsp;GB</td>
+</tr>
+<tr>
+<th scope="row">Ideal para</th>
+<td class="col-db">Consultas SQL, cruces, dashboards</td>
+<td class="col-tar">Revisi&oacute;n visual, OCR, archivo</td>
+</tr>
+<tr>
+<th scope="row">Incluye</th>
+<td class="col-db">Territorio + metadatos</td>
+<td class="col-tar">PDFs originales</td>
+</tr>
+</tbody>
+</table>
+</section>
+</main>
 </div>
 <script>
 document.querySelectorAll("[data-track]").forEach(function(btn){
 btn.addEventListener("click",function(e){
 e.preventDefault();
+if(btn.classList.contains("is-downloading"))return;
 var url=btn.href;
 var name=btn.getAttribute("data-track");
 var data={
@@ -88,12 +488,62 @@ archivo:btn.getAttribute("data-track-archivo"),
 vuelta:btn.getAttribute("data-track-vuelta"),
 tamano:btn.getAttribute("data-track-tamano")
 };
-function download(){window.open(url,"_blank","noopener,noreferrer")}
+var label=btn.querySelector(".dl-card__action-label");
+var text=btn.querySelector(".dl-card__action-text");
+var originalText=label?label.getAttribute("data-label"):"";
+function setLoading(on){
+btn.classList.toggle("is-downloading",on);
+btn.setAttribute("aria-busy",on?"true":"false");
+if(text)text.textContent=on?"Iniciando descarga\u2026":originalText;
+}
+function finishDownload(){
+window.open(url,"_blank","noopener,noreferrer");
+setTimeout(function(){setLoading(false)},2500);
+}
+setLoading(true);
 if(window.umami){
-Promise.resolve(window.umami.track(name,data)).finally(function(){setTimeout(download,150)})
-}else{download()}
+Promise.resolve(window.umami.track(name,data)).finally(function(){setTimeout(finishDownload,150)})
+}else{setTimeout(finishDownload,150)}
 })
-})
+});
+var progressSection=document.querySelector(".progress-section");
+function revealOnScroll(selector){
+var nodes=document.querySelectorAll(selector);
+if(!nodes.length)return;
+function show(el){el.classList.add("is-visible")}
+if(!("IntersectionObserver" in window)){
+nodes.forEach(show);
+return;
+}
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+show(entry.target);
+observer.unobserve(entry.target);
+}
+});
+},{threshold:.15,rootMargin:"0px 0px -30px 0px"});
+nodes.forEach(function(el){
+if(el.getBoundingClientRect().top<window.innerHeight)show(el);
+observer.observe(el);
+});
+}
+if(progressSection){
+if("IntersectionObserver" in window){
+var progressObserver=new IntersectionObserver(function(entries){
+entries.forEach(function(entry){
+if(entry.isIntersecting){
+progressSection.classList.add("is-visible");
+progressObserver.disconnect();
+}
+});
+},{threshold:.2,rootMargin:"0px 0px -40px 0px"});
+if(progressSection.getBoundingClientRect().top<window.innerHeight)progressSection.classList.add("is-visible");
+progressObserver.observe(progressSection);
+}else{progressSection.classList.add("is-visible")}
+}
+revealOnScroll(".dl-card.reveal");
+revealOnScroll(".pick-guide.reveal");
 </script>
 </body>
 </html>
