@@ -38,6 +38,7 @@ p.desc{font-size:.85rem;margin-bottom:24px}
 .progress-count span{color:#666;font-weight:500}
 .update-date{color:#999;font-size:.75rem;line-height:1.4}
 </style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="f39c5cd2-b74f-47e3-8d67-e1a9ee154794"></script>
 </head>
 <body>
 <div class="card">
@@ -46,11 +47,21 @@ p.desc{font-size:.85rem;margin-bottom:24px}
 <p>Recopilamos y centralizamos <strong>todas las actas de delegados disponibles hasta la fecha</strong>, de la <strong>primera vuelta</strong> de las elecciones presidenciales de Colombia 2026. <strong>Una sola descarga</strong> con toda la informaci&oacute;n recopilada: elige base de datos SQLite o paquete TAR con los PDF.</p>
 <p class="desc">La base SQLite incluye la organizaci&oacute;n territorial y su relaci&oacute;n con cada acta de delegados reportada. El archivo .tar agrupa todos los PDF en un &uacute;nico fichero.</p>
 <div class="btns">
-<a class="btn btn-sql" href="https://e14s-pre2026.ccubillos.com/e14.db" download>
+<a class="btn btn-sql" href="https://e14s-pre2026.ccubillos.com/e14.db" download
+data-umami-event="descarga-e14-delegados-sqlite"
+data-umami-event-formato="sqlite"
+data-umami-event-archivo="e14.db"
+data-umami-event-vuelta="primera"
+data-umami-event-tamano="38.76 MB">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
 <span class="btn-inner">Descargar DB (SQL)<span class="btn-size">38.76 MB</span></span>
 </a>
-<a class="btn btn-tar" href="https://e14s-pre2026.ccubillos.com/e14s.tar" download>
+<a class="btn btn-tar" href="https://e14s-pre2026.ccubillos.com/e14s.tar" download
+data-umami-event="descarga-e14-delegados-tar"
+data-umami-event-formato="tar"
+data-umami-event-archivo="e14s.tar"
+data-umami-event-vuelta="primera"
+data-umami-event-tamano="22.54 GB">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
 <span class="btn-inner">Descargar TAR (PDFs)<span class="btn-size">22.54 GB</span></span>
 </a>
